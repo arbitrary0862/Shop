@@ -19,6 +19,8 @@ $result = $conn->query("SELECT * FROM orders");
         <tr>
             <th>ID</th>
             <th>商品 ID</th>
+            <th>商品 數量</th>
+            <th>商品 價格</th>
             <th>使用者姓名</th>
             <th>使用者電話</th>
             <th>使用者地址</th>
@@ -30,6 +32,8 @@ $result = $conn->query("SELECT * FROM orders");
             echo "<tr>";
             echo "<td>" . $row['id'] . "</td>";
             echo "<td>" . $row['product_id'] . "</td>";
+            echo "<td>". $row["product_quantity"] . "</td>";
+            echo "<td>". $row["order_price"] ."</td>";
             echo "<td>" . $row['user_name'] . "</td>";
             echo "<td>" . $row['user_phone'] . "</td>";
             echo "<td>" . $row['user_address'] . "</td>";

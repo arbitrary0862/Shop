@@ -1,9 +1,9 @@
 <?php
 // 綠界支付API資訊
-$gateway_url = 'https://payment.greenworld.com.tw/Pay4G/walpayadv'; // 依據實際情況替換
-$merchant_id = 'YourMerchantID'; // 替換為您的商店編號
-$hash_key = 'YourHashKey'; // 替換為您的 Hash Key
-$hash_iv = 'YourHashIV'; // 替換為您的 Hash IV
+$gateway_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut'; // 依據實際情況替換
+$merchant_id = '2000132'; // 替換為您的商店編號
+$hash_key = 'ejCk326UnaZWKisg'; // 替換為您的 Hash Key
+$hash_iv = 'q9jcZX8Ib9LM8wYk'; // 替換為您的 Hash IV
 
 // 訂單資訊
 $order_params = array(

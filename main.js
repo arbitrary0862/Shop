@@ -4,24 +4,7 @@ let orders = [];
 
 // 初始載入判定購物車是否為空
 window.addEventListener('load', () => {
-  fetch('get_cart_items.php')
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('連線失敗');
-      }
-      return response.json();
-  })
-  .then(data => {
-      if (data.cart.length > 0) {
-          cart = data.cart;
-          updateCart();
-      }
-      // 如果購物車是空的，不執行任何額外的動作，保持原本的頁面狀態
-  })
-  .catch(error => {
-      console.error('無法取得購物車內容：', error);
-      // 處理錯誤的情況，例如顯示錯誤訊息給使用者
-  });
+  fetchCartItems();
 });
 
 // 更新購物車
@@ -63,9 +46,6 @@ function addToCart(productId, productName, productPrice) {
   })
   .then(response => response.json())
   .then(data => {
-    //console.log(data);
-    // 清空現有購物車內容再更新
-    cart = [];
     // 更新本地的購物車數據
     cart = data.cart;
     updateCart();
@@ -77,28 +57,22 @@ function addToCart(productId, productName, productPrice) {
 
 // 移除商品
 function removeFromCart(productId) {
-  const index = cart.findIndex((item) => parseInt(item.product_id) === productId);
-  //console.log(cart);
-  if (index !== -1) {
-    cart.splice(index, 1);
+  fetch('remove_from_cart.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ productId }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    // 更新本地的購物車數據
+    cart = data.cart;
     updateCart();
-
-    // 發送刪除請求到後端
-    fetch('remove_from_cart.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ productId }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      
-    })
-    .catch(error => {
-      console.error('刪除失敗：', error);
-    });
-  }
+  })
+  .catch(error => {
+    console.error('刪除失敗：', error);
+  });
 }
 
 
@@ -107,6 +81,7 @@ function checkout() {
   const name = document.getElementById("name").value;
   const phone = document.getElementById("phone").value;
   const address = document.getElementById("address").value;
+  const order_price = document.getElementById("total").textContent;
 
   // 檢查是否填寫了訂購人資訊
   if (!name || !phone || !address) {
@@ -115,12 +90,14 @@ function checkout() {
   }
   // console.log(cart);
   const productIdList = cart.map(item => item.product_id);
-  // console.log(productIdList);
+  const productquantityList = cart.map(item => item.quantity);
   const order = {
     name: name,
     phone: phone,
     address: address,
-    productId: productIdList.join(',')
+    productId: productIdList.join(','),
+    productquantity: productquantityList.join(','),
+    order_price: order_price
   };
 
   // 綠界金流
@@ -144,4 +121,26 @@ function checkout() {
       alert('付款成功但無法寫入資料庫');
     });
   updateCart();
+}
+
+// 獲取購物車商品
+function fetchCartItems() {
+  fetch('get_cart_items.php')
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('連線失敗');
+      }
+      return response.json();
+  })
+  .then(data => {
+      if (data.cart.length > 0) {
+          cart = data.cart;
+          updateCart();
+      }
+      // 如果購物車是空的，不執行任何額外的動作，保持原本的頁面狀態
+  })
+  .catch(error => {
+      console.error('無法取得購物車內容：', error);
+      // 處理錯誤的情況，例如顯示錯誤訊息給使用者
+  });
 }

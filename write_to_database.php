@@ -10,13 +10,15 @@ if ($input_data) {
         $phone = $input_data['phone'];
         $address = $input_data['address'];
         $productId = $input_data['productId']; // 產品ID
+        $productquantity = $input_data['productquantity']; // 產品數量
+        $order_price = (int)$input_data['order_price']; // 訂單金額
         $paymentStatus = "待付款";
 
         // 寫入訂單到資料庫中
-        $sql = "INSERT INTO orders (product_id, user_name, user_phone, user_address, payment_status) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO orders (product_id, product_quantity, order_price, user_name, user_phone, user_address, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("sssss", $productId, $name, $phone, $address, $paymentStatus);
+            $stmt->bind_param("ssissss", $productId, $productquantity, $order_price, $name, $phone, $address, $paymentStatus);
             $stmt->execute();
 
             // 獲取最後一次插入操作生成的 ID
