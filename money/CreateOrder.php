@@ -1,24 +1,27 @@
 <?php
 // 綠界支付API資訊
-$gateway_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut'; // 依據實際情況替換
-$merchant_id = '2000132'; // 替換為您的商店編號
-$hash_key = 'ejCk326UnaZWKisg'; // 替換為您的 Hash Key
-$hash_iv = 'q9jcZX8Ib9LM8wYk'; // 替換為您的 Hash IV
+$gateway_url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'; // 依據實際情況替換
+$merchant_id = '3002607'; // 商店編號
+$hash_key = 'pwFHCqoQZGmho4w6'; // Hash Key
+$hash_iv = 'EkRm7iFT261dpevs'; // Hash IV
 
 // 訂單資訊
 $order_params = array(
     'MerchantID' => $merchant_id,
-    'RespondType' => 'JSON',
-    'TimeStamp' => time(),
-    'Version' => '1.2',
-    'MerchantOrderNo' => 'YourOrderNumber', // 替換為您的訂單編號
-    'Amt' => 100, // 替換為訂單金額
-    'ItemDesc' => 'YourItemDescription', // 替換為商品描述
-    'Email' => 'customer@example.com', // 替換為客戶Email
-    'LoginType' => 0,
+    'MerchantTradeNo' => 'YourOrderNumber', // 訂單編號
+    'MerchantTradeDate ' => date("Y/m/d H:i:s"), //交易時間
+    'PaymentType' => 'aio', // 交易類型
+    'TotalAmount' => 100, // 訂單金額
+    'TradeDesc' => 'product', // 商品描述
+    'ItemName' => 'product', // 商品名稱
+    'ReturnURL' => 'http://www.ecpay.com.tw/receive.php', //回傳網址
+    'ChoosePayment' => 'Credit',
+    // 'CheckMacValue' => $CheckMacValue, //替換檢查碼
+    'EncryptType' => 1 //加密類型
 );
+// var_dump($order_params); 
 
-ksort($order_params);
+ksort($order_params); //A到Z的順序
 
 // 產生 CheckValue
 $check_value = 'HashKey=' . $hash_key;
@@ -26,8 +29,21 @@ foreach ($order_params as $key => $value) {
     $check_value .= '&' . $key . '=' . $value;
 }
 $check_value .= '&HashIV=' . $hash_iv;
+$check_value = urlencode($check_value); //URL encode
+$check_value = strtolower($check_value); //轉小寫
 
+// 還原特殊字元
+$check_value = str_replace('%3a', ':', $check_value);
+$check_value = str_replace('%2f', '/', $check_value);
+$check_value = str_replace('%2e', '.', $check_value);
+$check_value = str_replace('%3d', '=', $check_value);
+$check_value = str_replace('%26', '&', $check_value);
+$check_value = str_replace('+', ' ', $check_value);
+// var_dump($check_value);
+
+// hash sha256加密後轉大寫寫回變數 $order_params
 $order_params['CheckValue'] = strtoupper(hash('sha256', $check_value));
+// var_dump($order_params);
 
 // 發送訂單請求
 $response = httpPost($gateway_url, $order_params);

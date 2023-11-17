@@ -1,20 +1,19 @@
 <?php
 // 綠界支付API資訊
-$gateway_url = 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo'; // 依據實際情況替換
-$merchant_id = '2000132'; // 替換為您的商店編號
-$hash_key = 'ejCk326UnaZWKisg'; // 替換為您的 Hash Key
-$hash_iv = 'q9jcZX8Ib9LM8wYk'; // 替換為您的 Hash IV
+$gateway_url = 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5'; // 依據實際情況替換
+$merchant_id = '3002607'; // 替換為您的商店編號
+$hash_key = 'pwFHCqoQZGmho4w6'; // 替換為您的 Hash Key
+$hash_iv = 'EkRm7iFT261dpevs'; // 替換為您的 Hash IV
 
 // 查詢訂單資訊
 $query_params = array(
     'MerchantID' => $merchant_id,
-    'RespondType' => 'JSON',
     'TimeStamp' => time(),
-    'Version' => '1.2',
-    'MerchantOrderNo' => 'YourOrderNumber', // 替換為您的訂單編號
+    'MerchantTradeNo' => '2023110100'.'1', // 替換為您的訂單編號
 );
+// var_dump($query_params); 
 
-ksort($query_params);
+ksort($query_params); //A到Z的順序
 
 // 產生 CheckValue
 $check_value = 'HashKey=' . $hash_key;
@@ -23,8 +22,16 @@ foreach ($query_params as $key => $value) {
 }
 $check_value .= '&HashIV=' . $hash_iv;
 
-$query_params['CheckValue'] = strtoupper(hash('sha256', $check_value));
+$check_value = urlencode($check_value); //URL encode
+$check_value = strtolower($check_value); //轉小寫
+// var_dump($check_value); 
+// 還原特殊字元
+$check_value = str_replace('%3d', '=', $check_value);
+$check_value = str_replace('%26', '&', $check_value);
 
+// hash sha256加密後轉大寫寫回變數 $query_params
+$query_params['CheckValue'] = strtoupper(hash('sha256', $check_value));
+// var_dump($query_params);
 // 發送查詢訂單請求
 $response = httpPost($gateway_url, $query_params);
 
