@@ -21,7 +21,6 @@ foreach ($query_params as $key => $value) {
     $check_value .= '&' . $key . '=' . $value;
 }
 $check_value .= '&HashIV=' . $hash_iv;
-
 $check_value = urlencode($check_value); //URL encode
 $check_value = strtolower($check_value); //轉小寫
 // var_dump($check_value); 

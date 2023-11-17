@@ -22,13 +22,17 @@ if ($input_data) {
             $stmt->execute();
 
             // 獲取最後一次插入操作生成的 ID
-            $orderID = $conn->insert_id;
+            $orderID = '2023110100'.$conn->insert_id;
 
             // 檢查是否成功寫入
             if ($stmt->affected_rows > 0) {
                 echo $orderID;
                 // 清空購物車
                 $sql = "TRUNCATE TABLE cart";
+
+                // 導向綠界金流
+
+
                 $result = $conn->query($sql);
 
             } else {

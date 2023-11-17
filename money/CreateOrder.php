@@ -22,7 +22,6 @@ $order_params = array(
 // var_dump($order_params); 
 
 ksort($order_params); //A到Z的順序
-
 // 產生 CheckValue
 $check_value = 'HashKey=' . $hash_key;
 foreach ($order_params as $key => $value) {
