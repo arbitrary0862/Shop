@@ -39,7 +39,7 @@ $check_value = strtolower($check_value); //轉小寫
 
 
 // hash sha256加密後轉大寫寫回變數 $query_params
-$query_params['CheckValue'] = strtoupper(hash('sha256', $check_value));
+$query_params['CheckMacValue'] = strtoupper(hash('sha256', $check_value));
 // var_dump($query_params);
 // 發送查詢訂單請求
 $response = httpPost($gateway_url, $query_params);
