@@ -29,11 +29,7 @@ if ($input_data) {
                 echo $orderID;
                 // 清空購物車
                 $sql = "TRUNCATE TABLE cart";
-
-                // 導向綠界金流
-
-
-                $result = $conn->query($sql);
+                // $result = $conn->query($sql);
 
             } else {
                 echo "無法寫入訂單到資料庫。";

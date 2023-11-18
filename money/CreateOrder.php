@@ -9,14 +9,13 @@ $hash_iv = 'EkRm7iFT261dpevs'; // Hash IV
 $order_params = array(
     'MerchantID' => $merchant_id,
     'MerchantTradeNo' => 'YourOrderNumber', // 訂單編號
-    'MerchantTradeDate ' => date("Y/m/d H:i:s"), //交易時間
+    'MerchantTradeDate' => date("Y/m/d H:i:s"), //交易時間
     'PaymentType' => 'aio', // 交易類型
     'TotalAmount' => 100, // 訂單金額
     'TradeDesc' => 'product', // 商品描述
     'ItemName' => 'product', // 商品名稱
-    'ReturnURL' => 'http://www.ecpay.com.tw/receive.php', //回傳網址
+    // 'ReturnURL' => 'http://www.ecpay.com.tw/receive.php', //回傳網址
     'ChoosePayment' => 'Credit',
-    // 'CheckMacValue' => $CheckMacValue, //替換檢查碼
     'EncryptType' => 1 //加密類型
 );
 // var_dump($order_params); 
@@ -30,14 +29,7 @@ foreach ($order_params as $key => $value) {
 $check_value .= '&HashIV=' . $hash_iv;
 $check_value = urlencode($check_value); //URL encode
 $check_value = strtolower($check_value); //轉小寫
-
-// 還原特殊字元
-$check_value = str_replace('%3a', ':', $check_value);
-$check_value = str_replace('%2f', '/', $check_value);
-$check_value = str_replace('%2e', '.', $check_value);
-$check_value = str_replace('%3d', '=', $check_value);
-$check_value = str_replace('%26', '&', $check_value);
-$check_value = str_replace('+', ' ', $check_value);
+$check_value = urldecode($check_value); // 還原特殊字元
 // var_dump($check_value);
 
 // hash sha256加密後轉大寫寫回變數 $order_params
@@ -60,9 +52,21 @@ function httpPost($url, $params) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+    
     $response = curl_exec($ch);
     curl_close($ch);
+    
+    // 處理回應
+    $result = json_decode($response, true);
+    if ($result && isset($result['RtnCode']) && $result['RtnCode'] === '1') {
+        // 支付成功
+    } else {
+        // 處理錯誤
+    }
+
     return $response;
 }
+
 ?>

@@ -25,8 +25,9 @@ $check_value = urlencode($check_value); //URL encode
 $check_value = strtolower($check_value); //轉小寫
 // var_dump($check_value); 
 // 還原特殊字元
-$check_value = str_replace('%3d', '=', $check_value);
-$check_value = str_replace('%26', '&', $check_value);
+$check_value = urldecode($check_value);
+// var_dump($check_value);
+
 
 // hash sha256加密後轉大寫寫回變數 $query_params
 $query_params['CheckValue'] = strtoupper(hash('sha256', $check_value));
