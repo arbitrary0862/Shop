@@ -18,6 +18,7 @@ $result = $conn->query("SELECT * FROM orders");
     <table border="1">
         <tr>
             <th>ID</th>
+            <th>訂單編號</th>
             <th>商品 ID</th>
             <th>商品 數量</th>
             <th>商品 價格</th>
@@ -25,12 +26,14 @@ $result = $conn->query("SELECT * FROM orders");
             <th>使用者電話</th>
             <th>使用者地址</th>
             <th>付款狀態</th>
+            <th>查詢付款狀態</th>
         </tr>
 
         <?php
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
             echo "<td>" . $row['id'] . "</td>";
+            echo "<td>". $row["order_num"] ."</td>";
             echo "<td>" . $row['product_id'] . "</td>";
             echo "<td>". $row["product_quantity"] . "</td>";
             echo "<td>". $row["order_price"] ."</td>";
@@ -38,6 +41,7 @@ $result = $conn->query("SELECT * FROM orders");
             echo "<td>" . $row['user_phone'] . "</td>";
             echo "<td>" . $row['user_address'] . "</td>";
             echo "<td>" . $row['payment_status'] . "</td>";
+            echo '<td>' . '<a href="../money/QueryOrder.php?order_id=' . $row['order_num'] . '">查詢付款</a></td>';
             echo "</tr>";
         }
         ?>
