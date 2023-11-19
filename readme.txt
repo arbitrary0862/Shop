@@ -28,6 +28,7 @@ CREATE TABLE products (
 訂單表 orders：
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    order_num VARCHAR(50),
     product_id VARCHAR(50),
     product_quantity VARCHAR(50),
     order_price INT,
