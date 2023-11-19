@@ -16,7 +16,7 @@ if ($input_data) {
         $address = $input_data['address'];
         $productId = $input_data['productId']; // 產品ID
         $productquantity = $input_data['productquantity']; // 產品數量
-        $order_price = (int)$input_data['order_price']; // 訂單金額
+        $order_price = (int) $input_data['order_price']; // 訂單金額
         $order_num = 'Test' . time();
         $paymentStatus = "待付款";
 
@@ -26,8 +26,6 @@ if ($input_data) {
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param("sssissss", $order_num, $productId, $productquantity, $order_price, $name, $phone, $address, $paymentStatus);
             $stmt->execute();
-
-            // 獲取最後一次插入操作生成的 訂單編號
             $orderID = $order_num;
 
             // 檢查是否成功寫入
@@ -41,11 +39,11 @@ if ($input_data) {
                     'TotalAmount' => $order_price, // 訂單金額
                     'TradeDesc' => 'product', // 商品描述
                     'ItemName' => 'product', // 商品名稱
-                    'ReturnURL' => 'http://127.0.0.1/Shop/write_to_database.php', //回傳網址
+                    'ReturnURL' => 'http://127.0.0.1/Shop/index.php', // 回傳網址
                     'ChoosePayment' => 'Credit',
-                    'EncryptType' => 1 //加密類型
+                    'EncryptType' => 1 // 加密類型
                 );
-                ksort($order_params); //A到Z的順序
+                ksort($order_params); // A到Z的順序
                 // 產生 CheckValue
                 $check_value = 'HashKey=' . $hash_key;
                 foreach ($order_params as $key => $value) {
@@ -76,23 +74,24 @@ if ($input_data) {
                 // var_dump($response);
                 // 處理回應
                 if ($response) {
-                    $result = json_decode($response, true);
-                    if ($result && isset($result['RtnCode']) && $result['RtnCode'] === '1') {
-                        // 支付成功
-                        header("Location: " . $result['PaymentURL']);
-                    } else {
-                        // 處理錯誤
-                        echo '建立付款訂單失敗。錯誤：' . $result['RtnCode'];
-                    }
+                    // $result = json_decode($response, true);
+                    // if ($result && isset($result['RtnCode']) && $result['RtnCode'] === '1') {
+                    //     // 支付成功
+                    //     header("Location: " . $result['PaymentURL']);
+                    //     // exit;
+                    // } else {
+                    //     // 處理錯誤
+                    //     echo '建立付款訂單失敗。錯誤：' . $result['RtnCode'];
+                    //     var_dump($response);
+                    // }
                 } else {
                     echo '無法連接綠界';
                 }
+                // 返回訂單編號
+                echo $orderID;
                 // 串接綠界結束，清空購物車
                 $sql = "TRUNCATE TABLE cart";
                 $result = $conn->query($sql);
-                // 返回訂單編號
-                echo $orderID;
-                
             } else {
                 echo "無法寫入訂單到資料庫。";
             }
@@ -109,13 +108,14 @@ if ($input_data) {
 }
 
 // 送出 HTTP POST 請求
-function httpPost($url, $params) {
+function httpPost($url, $params)
+{
     $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-    
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // 將請求的結果以字串返回，而不是直接輸出
+    curl_setopt($ch, CURLOPT_POST, true); // 啟用POST請求
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded')); // HTTP標頭
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params)); // 設定POST請求的數據。
+
     $response = curl_exec($ch);
     curl_close($ch);
 

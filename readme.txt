@@ -46,36 +46,3 @@ CREATE TABLE cart (
     product_price DECIMAL(10, 2),
     quantity INT
 );
-====================================
-<?php
-// 此處應該處理與綠界支付系統的通信
-// 獲取訂單資訊
-$total_price = $_POST['total_price'];
-$order_id = $_POST['order_id'];
-// 其他訂單資訊
-
-// 在這裡將訂單資訊發送到綠界支付系統
-// 假設以下是綠界支付系統的模擬程式碼
-
-// 模擬付款成功
-$payment_status = '付款成功';
-
-// 設置付款狀態，這部分應該根據綠界回傳的付款狀態來設置
-// 這只是一個示例，實際情況中，您需要根據綠界回傳的資訊來設置付款狀態
-if ($payment_status === '付款成功') {
-    // 付款成功，更新訂單狀態為已付款
-    include 'db_connect.php';
-
-    $update_query = "UPDATE orders SET payment_status = '已付款' WHERE order_id = $order_id";
-
-    if ($conn->query($update_query) === TRUE) {
-        echo "訂單付款成功";
-    } else {
-        echo "Error: " . $update_query . "<br>" . $conn->error;
-    }
-} else {
-    // 付款失敗，可以處理錯誤情況
-    echo "付款失敗";
-}
-?>
-=========================

@@ -100,10 +100,6 @@ function checkout() {
     order_price: order_price
   };
 
-  // 綠界金流
-
-  // 在付款成功後寫入資料庫
-
   // 使用 fetch 將資料發送到寫入資料庫PHP
   fetch('write_to_database.php', {
       method: 'POST',
@@ -114,7 +110,7 @@ function checkout() {
     })
     .then(response => response.text())
     .then(data => {
-      alert(`付款成功！訂單編號：${data}，姓名：${name}，電話：${phone}，地址：${address}`);
+      alert(`已建立訂單！訂單編號：${data}，姓名：${name}，電話：${phone}，地址：${address}`);
       location.reload();
     })
     .catch(error => {
