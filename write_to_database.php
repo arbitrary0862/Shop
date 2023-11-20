@@ -18,15 +18,14 @@ if ($input_data) {
         $productquantity = $input_data['productquantity']; // 產品數量
         $order_price = (int) $input_data['order_price']; // 訂單金額
         $order_num = 'Test' . time();
+        $orderID = $order_num;
         $paymentStatus = "待付款";
-
         // 寫入訂單到資料庫中
         $sql = "INSERT INTO orders (order_num, product_id, product_quantity, order_price, user_name, user_phone, user_address, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("sssissss", $order_num, $productId, $productquantity, $order_price, $name, $phone, $address, $paymentStatus);
+            $stmt->bind_param("sssissss", $orderID, $productId, $productquantity, $order_price, $name, $phone, $address, $paymentStatus);
             $stmt->execute();
-            $orderID = $order_num;
 
             // 檢查是否成功寫入
             if ($stmt->affected_rows > 0) {
@@ -70,25 +69,25 @@ if ($input_data) {
                 // var_dump($order_params);
 
                 // 發送訂單請求
-                $response = httpPost($gateway_url, $order_params);
-                // var_dump($response);
-                // 處理回應
-                if ($response) {
-                    // $result = json_decode($response, true);
-                    // if ($result && isset($result['RtnCode']) && $result['RtnCode'] === '1') {
-                    //     // 支付成功
-                    //     header("Location: " . $result['PaymentURL']);
-                    //     // exit;
-                    // } else {
-                    //     // 處理錯誤
-                    //     echo '建立付款訂單失敗。錯誤：' . $result['RtnCode'];
-                    //     var_dump($response);
-                    // }
-                } else {
-                    echo '無法連接綠界';
-                }
+                // $response = httpPost($gateway_url, $order_params);
+                // // var_dump($response);
+                // // 處理回應
+                // if ($response) {
+                //     // $result = json_decode($response, true);
+                //     // if ($result && isset($result['RtnCode']) && $result['RtnCode'] === '1') {
+                //     //     // 支付成功
+                //     //     header("Location: " . $result['PaymentURL']);
+                //     //     // exit;
+                //     // } else {
+                //     //     // 處理錯誤
+                //     //     echo '建立付款訂單失敗。錯誤：' . $result['RtnCode'];
+                //     //     var_dump($response);
+                //     // }
+                // } else {
+                //     echo '無法連接綠界';
+                // }
                 // 返回訂單編號
-                echo $orderID;
+                echo json_encode(array('orderParams' => $order_params));
                 // 串接綠界結束，清空購物車
                 $sql = "TRUNCATE TABLE cart";
                 $result = $conn->query($sql);

@@ -7,6 +7,28 @@ window.addEventListener('load', () => {
   fetchCartItems();
 });
 
+// 獲取購物車商品
+function fetchCartItems() {
+  fetch('get_cart_items.php')
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('連線失敗');
+      }
+      return response.json();
+  })
+  .then(data => {
+      if (data.cart.length > 0) {
+          cart = data.cart;
+          updateCart();
+      }
+      // 如果購物車是空的，不執行任何額外的動作，保持原本的頁面狀態
+  })
+  .catch(error => {
+      console.error('無法取得購物車內容：', error);
+      // 處理錯誤的情況，例如顯示錯誤訊息給使用者
+  });
+}
+
 // 更新購物車
 function updateCart() {
   const cartList = document.getElementById("cart-items");
@@ -108,35 +130,40 @@ function checkout() {
       },
       body: JSON.stringify(order),
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-      alert(`已建立訂單！訂單編號：${data}，姓名：${name}，電話：${phone}，地址：${address}`);
-      location.reload();
+      const orderParams = data.orderParams;
+      // console.log('orderParams:', orderParams);
+      alert(`已建立訂單！訂單編號：${orderParams.MerchantTradeNo}，姓名：${name}，電話：${phone}，地址：${address}`);
+        // 將 orderParams 中的資料轉換成 URL-encoded 字符串
+      const formData = new URLSearchParams();
+      Object.entries(orderParams).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      // 透過 Form 提交POST請求至綠界
+      const form = document.createElement('form');
+      form.setAttribute('method', 'post');
+      // form.setAttribute('action', '127.0.0.1/shop'); // 依據實際情況替換
+      form.setAttribute('action', 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'); // 依據實際情況替換
+      form.setAttribute('enctype', 'application/x-www-form-urlencoded');
+
+      // 創建一個 input 元素，作為存放 URL-encoded 字符串的容器
+      const input = document.createElement('input');
+      input.setAttribute('type', 'hidden');
+      input.setAttribute('name', 'data');
+      input.setAttribute('value', formData);
+      form.appendChild(input);
+
+      // 將 Form 附加到 DOM 中
+      document.body.appendChild(form);
+
+      // 提交 Form
+      form.submit();
     })
     .catch(error => {
-      alert('付款成功但無法寫入資料庫');
+      console.error('錯誤發生：', error);
+      alert('無法寫入資料庫');
     });
-  updateCart();
 }
 
-// 獲取購物車商品
-function fetchCartItems() {
-  fetch('get_cart_items.php')
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('連線失敗');
-      }
-      return response.json();
-  })
-  .then(data => {
-      if (data.cart.length > 0) {
-          cart = data.cart;
-          updateCart();
-      }
-      // 如果購物車是空的，不執行任何額外的動作，保持原本的頁面狀態
-  })
-  .catch(error => {
-      console.error('無法取得購物車內容：', error);
-      // 處理錯誤的情況，例如顯示錯誤訊息給使用者
-  });
-}
