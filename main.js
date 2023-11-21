@@ -97,7 +97,6 @@ function removeFromCart(productId) {
   });
 }
 
-
 // 送出檢查
 function checkout() {
   const name = document.getElementById("name").value;
@@ -133,31 +132,29 @@ function checkout() {
     .then(response => response.json())
     .then(data => {
       const orderParams = data.orderParams;
-      // console.log('orderParams:', orderParams);
+
+      // 顯示訂單建立成功的提示訊息
       alert(`已建立訂單！訂單編號：${orderParams.MerchantTradeNo}，姓名：${name}，電話：${phone}，地址：${address}`);
-        // 將 orderParams 中的資料轉換成 URL-encoded 字符串
-      const formData = new URLSearchParams();
-      Object.entries(orderParams).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
 
-      // 透過 Form 提交POST請求至綠界
+      // 建立 Form 表單
       const form = document.createElement('form');
-      form.setAttribute('method', 'post');
-      // form.setAttribute('action', '127.0.0.1/shop'); // 依據實際情況替換
-      form.setAttribute('action', 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'); // 依據實際情況替換
-      form.setAttribute('enctype', 'application/x-www-form-urlencoded');
-
-      // 創建一個 input 元素，作為存放 URL-encoded 字符串的容器
-      const input = document.createElement('input');
-      input.setAttribute('type', 'hidden');
-      input.setAttribute('name', 'data');
-      input.setAttribute('value', formData);
-      form.appendChild(input);
 
       // 將 Form 附加到 DOM 中
-      document.body.appendChild(form);
+      form.setAttribute('action', 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'); // 依據實際串接綠界網址替換
+      form.setAttribute('enctype', 'application/x-www-form-urlencoded');
+      form.setAttribute('method', 'post');
 
+      Object.entries(orderParams).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'hidden'); //隱藏表單欄位
+        input.setAttribute("name", key);
+        input.setAttribute("value", value);
+        form.appendChild(input);
+      });
+      
+      // 將表單附加到文檔的body中
+      document.body.appendChild(form);
+      
       // 提交 Form
       form.submit();
     })
