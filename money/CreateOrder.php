@@ -14,13 +14,14 @@ $order_params = array(
     'TotalAmount' => 100, // 訂單金額
     'TradeDesc' => 'product', // 商品描述
     'ItemName' => 'product', // 商品名稱
-    'ReturnURL' => 'http://127.0.0.1/Shop/money/CreateOrder.php', //回傳網址
+    'ReturnURL' => 'http://127.0.0.1/Shop/index.php', //回傳網址
+    'ClientBackURL' => 'http://127.0.0.1/Shop/index.php', //返回網址
     'ChoosePayment' => 'Credit',
     'EncryptType' => 1 //加密類型
 );
-// var_dump($order_params); 
 
 ksort($order_params); //A到Z的順序
+
 // 產生 CheckValue
 $check_value = 'HashKey=' . $hash_key;
 foreach ($order_params as $key => $value) {
@@ -38,43 +39,34 @@ $check_value = str_replace('%28', '(', $check_value);
 $check_value = str_replace('%29', ')', $check_value);
 $check_value = str_replace('%20', '+', $check_value);
 
-// $check_value = urldecode($check_value); // 還原特殊字元
 $check_value = strtolower($check_value); //轉小寫
-// var_dump($check_value);
 
 // hash sha256加密後轉大寫寫回變數 $order_params
 $order_params['CheckMacValue'] = strtoupper(hash('sha256', $check_value));
-// var_dump($order_params);
 
-// 發送訂單請求
-$response = httpPost($gateway_url, $order_params);
-var_dump($response);
-// 處理回應
-if ($response) {
-    $result = json_decode($response, true);
-    if ($result && isset($result['RtnCode']) && $result['RtnCode'] === '1') {
-        // 支付成功
-        header("Location: " . $result['PaymentURL']);
-    } else {
-        // 處理錯誤
-        echo '建立付款訂單失敗。錯誤：' . $result['RtnCode'];
-    }
-} else {
-    echo '無法連接綠界';
-}
-
-// 送出 HTTP POST 請求
-function httpPost($url, $params) {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-    
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    return $response;
-}
-
+// 嵌入HTML表單
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+</head>
+<body>
+    <form id="paymentForm" action="<?php echo $gateway_url; ?>" method="post">
+        <?php
+        foreach ($order_params as $key => $value) {
+            echo '<input type="hidden" name="' . $key . '" value="' . $value . '">';
+        }
+        ?>
+        <input type="submit" value="Pay with ECPay">
+    </form>
+
+    <script>
+        // 自動提交表單
+        document.getElementById('paymentForm').submit();
+    </script>
+</body>
+</html>
