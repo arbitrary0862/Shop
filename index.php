@@ -44,11 +44,22 @@ $result = $conn->query("SELECT * FROM products");
       ?>
     </ul>
   </div>
-
+  <div id="delivery-info">
+    <h2>配送方式</h2>
+    <label>
+        <input type="radio" name="delivery" value="FAMI" checked>
+        全家取貨
+    </label>
+    <label>
+        <input type="radio" name="delivery" value="home">
+        宅配
+    </label>
+  </div>
   <div id="cart">
     <h2>購物車</h2>
     <ul id="cart-items"></ul>
     <p>Total: <span id="total">0</span> 元</p>
+    <button id="ecpayButton" style="" onclick="redirectToECPay()">選擇超取門市</button>
     <button onclick="checkout()">結帳</button>
   </div>
   <script src="main.js"></script>

@@ -1,35 +1,48 @@
 <?php
 // 綠界物流API資訊
 $apiUrl = 'https://logistics-stage.ecpay.com.tw/Express/Create';
-$merchant_id = '2000933'; // 商店編號
-$hash_key = 'XBERn1YOvpM9nfZc'; // Hash Key
-$hash_iv = 'h1ONHk4P4yqbl5LK'; // Hash IV
+$merchant_id = '2000132'; // 商店編號
+$hash_key = '5294y06JbISpM5x9'; // Hash Key
+$hash_iv = 'v77hoKGq4kWxNNIS'; // Hash IV
 
+$ship = '宅配';
 // 特店Request參數
 // 物流單資訊
-$logisticsType = 'HOME'; // 宅配
-$logisticsSubType = 'POST'; // 宅配
+// $logisticsType = 'HOME'; // 宅配
+// $logisticsSubType = 'POST'; // 宅配
+// $logisticsType  = 'CVS'; // 超取
+// $logisticsSubType = 'FAMI'; // 全家超取
 $goodsAmount = 100; // 商品金額
 
 $ship_params = array(
     'MerchantID' => $merchant_id,
-    'MerchantTradeNo' => 'Test' . time(),              // 交易編號
-    'MerchantTradeDate' => date('Y/m/d H:i:s'),        // 交易時間
-    'LogisticsType' => $logisticsType,
-    'LogisticsSubType' => $logisticsSubType,
-    'GoodsAmount' => $goodsAmount,
-    'GoodsWeight' => 2,                                // 商品重量
-    'SenderName' => '測試寄件人',                       // 寄件人姓名
-    'SenderPhone' => '0912345678',                     // 寄件人手機
-    'SenderZipCode' => '100',                          // 寄件人郵遞區號
-    'SenderAddress' => '測試寄件地址',                  // 寄件人地址
-    'ReceiverName' => '測試收件人',                     // 收件人姓名
-    'ReceiverPhone' => '0912345678',                   // 收件人手機
-    'ReceiverZipCode' => '403',                        // 收件人郵遞區號
-    'ReceiverAddress' => '台中市西區一二路34號',        // 收件人地址
+    'MerchantTradeNo' => 'Test' . time(), // 交易編號
+    'MerchantTradeDate' => date('Y/m/d H:i:s'), // 交易時間
+    'GoodsAmount' => $goodsAmount, // 商品金額
     'ServerReplyURL' => '127.0.0.1/back/order.php',    // Server端回覆網址
 );
-// =======================
+
+if($ship == '宅配'){
+    $ship_params['LogisticsType'] = 'HOME';
+    $ship_params['LogisticsSubType'] = 'POST';
+    $ship_params['GoodsWeight'] = 2;                                // 商品重量
+    $ship_params['SenderName'] = '測試寄件人';                       // 寄件人姓名
+    $ship_params['SenderPhone'] = '0912345678';                     // 寄件人手機
+    $ship_params['SenderZipCode'] = '100';                          // 寄件人郵遞區號
+    $ship_params['SenderAddress'] = '測試寄件地址';                  // 寄件人地址
+    $ship_params['ReceiverName'] = '測試收件人';                     // 收件人姓名
+    $ship_params['ReceiverPhone'] = '0912345678';                   // 收件人手機
+    $ship_params['ReceiverZipCode'] = '403';                        // 收件人郵遞區號
+    $ship_params['ReceiverAddress'] = '台中市西區一二路34號';        // 收件人地址
+
+}elseif($ship == '超取'){
+    $ship_params['LogisticsType'] = 'CVS';
+    $ship_params['LogisticsSubType'] = 'FAMI';
+    $ship_params['SenderName'] = '測試寄件人';                       // 寄件人姓名
+    $ship_params['ReceiverName'] = '測試收件人';                     // 收件人姓名
+    $ship_params['ReceiverCellPhone'] = '0912345678';               // 收件人手機
+    $ship_params['ReceiverStoreID'] = '';                           // 收件人門市代號 
+}
 
 ksort($ship_params); //A到Z的順序
 
