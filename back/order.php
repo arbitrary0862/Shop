@@ -31,7 +31,6 @@ $result = $conn->query("SELECT * FROM orders");
             <th>配送店ID</th>
             <th>配送店名</th>
             <th>串接物流</th>
-            <th>物流編號</th>
             <th>物流狀態</th>
             <th>查詢物流狀態</th>
         </tr>
@@ -53,7 +52,6 @@ $result = $conn->query("SELECT * FROM orders");
             echo "<td>" . $row['CVSStoreID'] . "</td>";
             echo "<td>" . $row['CVSStoreName'] . "</td>";
             echo '<td>' . '<a href="../ship/CreateShip.php?order_id=' . $row['order_num'] . '">串接物流</a></td>';
-            echo "<td>" . $row['ship_num'] . "</td>";
             echo "<td>" . $row['ship_status'] . "</td>";
             echo '<td>' . '<a href="../ship/QueryShip.php?order_id=' . $row['order_num'] . '">查詢物流</a></td>';
             echo "</tr>";

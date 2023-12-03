@@ -39,7 +39,6 @@ CREATE TABLE orders (
     deliveryMethod VARCHAR(20),
     CVSStoreID  VARCHAR(20),
     CVSStoreName  VARCHAR(50),
-    ship_num VARCHAR(50),
     ship_status VARCHAR(50)
 );
 
