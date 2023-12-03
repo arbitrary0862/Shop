@@ -27,6 +27,13 @@ $result = $conn->query("SELECT * FROM orders");
             <th>使用者地址</th>
             <th>付款狀態</th>
             <th>查詢付款狀態</th>
+            <th>配送方式</th>
+            <th>配送店ID</th>
+            <th>配送店名</th>
+            <th>串接物流</th>
+            <th>物流編號</th>
+            <th>物流狀態</th>
+            <th>查詢物流狀態</th>
         </tr>
 
         <?php
@@ -42,6 +49,13 @@ $result = $conn->query("SELECT * FROM orders");
             echo "<td>" . $row['user_address'] . "</td>";
             echo "<td>" . $row['payment_status'] . "</td>";
             echo '<td>' . '<a href="../money/QueryOrder.php?order_id=' . $row['order_num'] . '">查詢付款</a></td>';
+            echo "<td>" . $row['deliveryMethod'] . "</td>";
+            echo "<td>" . $row['CVSStoreID'] . "</td>";
+            echo "<td>" . $row['CVSStoreName'] . "</td>";
+            echo '<td>' . '<a href="../ship/CreateShip.php?order_id=' . $row['order_num'] . '">串接物流</a></td>';
+            echo "<td>" . $row['ship_num'] . "</td>";
+            echo "<td>" . $row['ship_status'] . "</td>";
+            echo '<td>' . '<a href="../ship/QueryShip.php?order_id=' . $row['order_num'] . '">查詢物流</a></td>';
             echo "</tr>";
         }
         ?>

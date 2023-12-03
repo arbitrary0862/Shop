@@ -35,7 +35,12 @@ CREATE TABLE orders (
     user_name VARCHAR(50),
     user_phone VARCHAR(20),
     user_address VARCHAR(100),
-    payment_status VARCHAR(20)
+    payment_status VARCHAR(20),
+    deliveryMethod VARCHAR(20),
+    CVSStoreID  VARCHAR(20),
+    CVSStoreName  VARCHAR(50),
+    ship_num VARCHAR(50),
+    ship_status VARCHAR(50)
 );
 
 購物車 cart：

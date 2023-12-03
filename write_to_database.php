@@ -17,13 +17,44 @@ if ($input_data) {
         $productId = $input_data['productId']; // 產品ID
         $productquantity = $input_data['productquantity']; // 產品數量
         $order_price = (int) $input_data['order_price']; // 訂單金額
+        $deliveryMethod = $input_data['deliveryMethod']; // 配送方式
+        $CVSStoreID = $input_data['CVSStoreID']; // 配送門市號碼
+        $CVSStoreName = $input_data['CVSStoreName']; // 配送門市名稱
         $order_num = 'Test' . time(); // 訂單編號
         $paymentStatus = "待付款";
+        // 避免 Undefined 警告，使用空字串
+        $emptyValue = "";
+        $cvsStoreIDValue = ($deliveryMethod == 'HOME') ? $emptyValue : $CVSStoreID;
+        $cvsStoreNameValue = ($deliveryMethod == 'HOME') ? $emptyValue : $CVSStoreName;
         // 寫入訂單到資料庫中
-        $sql = "INSERT INTO orders (order_num, product_id, product_quantity, order_price, user_name, user_phone, user_address, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO orders (order_num,
+                                    product_id, 
+                                    product_quantity,
+                                    order_price,
+                                    user_name,
+                                    user_phone,
+                                    user_address,
+                                    payment_status,
+                                    deliveryMethod,
+                                    CVSStoreID,
+                                    CVSStoreName)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("sssissss", $order_num, $productId, $productquantity, $order_price, $name, $phone, $address, $paymentStatus);
+            $stmt->bind_param(
+                "sssisssssss",
+                $order_num,
+                $productId,
+                $productquantity,
+                $order_price,
+                $name,
+                $phone,
+                $address,
+                $paymentStatus,
+                $deliveryMethod,
+                $cvsStoreIDValue,
+                $cvsStoreNameValue
+            );
             $stmt->execute();
 
             // 檢查是否成功寫入
@@ -61,7 +92,7 @@ if ($input_data) {
                 $check_value = str_replace('%28', '(', $check_value);
                 $check_value = str_replace('%29', ')', $check_value);
                 $check_value = str_replace('%20', '+', $check_value);
-                
+
                 $check_value = strtolower($check_value); //轉小寫
                 // hash sha256加密後，轉大寫，並寫回 $order_params
                 $order_params['CheckMacValue'] = strtoupper(hash('sha256', $check_value));

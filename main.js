@@ -104,6 +104,8 @@ function checkout() {
   const address = document.getElementById("address").value;
   const order_price = document.getElementById("total").textContent;
   const deliveryMethod = document.querySelector('input[name="delivery"]:checked').value;
+  const CVSStoreID = document.getElementById("CVSStoreID").value;
+  const CVSStoreName = document.getElementById("CVSStoreName").value;
   // 檢查是否填寫了訂購人資訊
   if (!name || !phone || !address) {
     alert("請填寫完整訂購人資訊");
@@ -120,6 +122,8 @@ function checkout() {
     productquantity: productquantityList.join(','),
     order_price: order_price,
     deliveryMethod: deliveryMethod, // 加入配送方式
+    CVSStoreID: CVSStoreID, // 配送門市號碼
+    CVSStoreName: CVSStoreName, // 配送門市名稱
   };
 
   // 使用 fetch 將資料發送到寫入資料庫PHP
@@ -161,7 +165,7 @@ function checkout() {
     })
     .catch(error => {
       console.error('錯誤發生：', error);
-      alert('無法寫入資料庫');
+      alert(error);
     });
 }
 

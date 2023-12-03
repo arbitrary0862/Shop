@@ -31,7 +31,7 @@ $order_params = array(
             echo '<input type="hidden" name="' . $key . '" value="' . $value . '">';
         }
         ?>
-        <input type="submit" value="ChooseShip with ECPay">
+        <!-- <input type="submit" value="ChooseShip with ECPay"> -->
     </form>
 
     <script>
