@@ -16,6 +16,7 @@ if (isset($_GET['order_id'])) {
         $deliveryMethod = $row['deliveryMethod'];   // 配送方式
         $user_name = $row['user_name'];             // 姓名
         $user_phone = $row['user_phone'];           // 電話
+        $pos_code = $row['pos_code'];               // 郵遞區號
         $user_addressd = $row['user_address'];      // 地址
         $CVSStoreID = $row['CVSStoreID'];           // 門市ID
     }else{
@@ -48,9 +49,9 @@ if ($deliveryMethod == 'HOME') {
     $ship_params['SenderAddress'] = '測試寄件地址';                 // 寄件人地址
     $ship_params['ReceiverName'] = $user_name;                     // 收件人姓名
     $ship_params['ReceiverPhone'] = $user_phone;                   // 收件人手機
-    $ship_params['ReceiverZipCode'] = '403';                       // 收件人郵遞區號
+    $ship_params['ReceiverZipCode'] = $pos_code;                   // 收件人郵遞區號
     $ship_params['ReceiverAddress'] = $user_addressd;              // 收件人地址
-    // $ship_params['ReceiverAddress'] = '台中市西區一二路34號';        // 收件人地址;              // 收件人地址
+    // $ship_params['ReceiverAddress'] = '台中市西區一二路34號';    // 收件人地址;              // 收件人地址
 
 } elseif ($deliveryMethod == 'FAMI') {
     $ship_params['LogisticsType'] = 'CVS';                         // 超取

@@ -13,6 +13,7 @@ if ($input_data) {
     if (isset($input_data['name']) && isset($input_data['phone']) && isset($input_data['address'])) {
         $name = $input_data['name'];
         $phone = $input_data['phone'];
+        $pos_code = $input_data['pos_code'];
         $address = $input_data['address'];
         $productId = $input_data['productId']; // 產品ID
         $productquantity = $input_data['productquantity']; // 產品數量
@@ -33,22 +34,24 @@ if ($input_data) {
                                     order_price,
                                     user_name,
                                     user_phone,
+                                    pos_code,
                                     user_address,
                                     payment_status,
                                     deliveryMethod,
                                     CVSStoreID,
                                     CVSStoreName)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param(
-                "sssisssssss",
+                "sssissssssss",
                 $order_num,
                 $productId,
                 $productquantity,
                 $order_price,
                 $name,
                 $phone,
+                $pos_code,
                 $address,
                 $paymentStatus,
                 $deliveryMethod,

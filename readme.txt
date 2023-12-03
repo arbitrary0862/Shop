@@ -34,6 +34,7 @@ CREATE TABLE orders (
     order_price INT,
     user_name VARCHAR(50),
     user_phone VARCHAR(20),
+    pos_code VARCHAR(20),
     user_address VARCHAR(100),
     payment_status VARCHAR(20),
     deliveryMethod VARCHAR(20),

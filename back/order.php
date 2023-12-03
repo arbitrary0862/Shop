@@ -24,6 +24,7 @@ $result = $conn->query("SELECT * FROM orders");
             <th>商品 價格</th>
             <th>使用者姓名</th>
             <th>使用者電話</th>
+            <th>使用者郵遞區號</th>
             <th>使用者地址</th>
             <th>付款狀態</th>
             <th>查詢付款狀態</th>
@@ -45,6 +46,7 @@ $result = $conn->query("SELECT * FROM orders");
             echo "<td>". $row["order_price"] ."</td>";
             echo "<td>" . $row['user_name'] . "</td>";
             echo "<td>" . $row['user_phone'] . "</td>";
+            echo "<td>" . $row['pos_code'] . "</td>";
             echo "<td>" . $row['user_address'] . "</td>";
             echo "<td>" . $row['payment_status'] . "</td>";
             echo '<td>' . '<a href="../money/QueryOrder.php?order_id=' . $row['order_num'] . '">查詢付款</a></td>';

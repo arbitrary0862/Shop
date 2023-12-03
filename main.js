@@ -101,13 +101,14 @@ function removeFromCart(productId) {
 function checkout() {
   const name = document.getElementById("name").value;
   const phone = document.getElementById("phone").value;
+  const pos_code = document.getElementById("pos_code").value;
   const address = document.getElementById("address").value;
   const order_price = document.getElementById("total").textContent;
   const deliveryMethod = document.querySelector('input[name="delivery"]:checked').value;
   const CVSStoreID = document.getElementById("CVSStoreID").value;
   const CVSStoreName = document.getElementById("CVSStoreName").value;
   // 檢查是否填寫了訂購人資訊
-  if (!name || !phone || !address) {
+  if (!name || !phone || !pos_code || !address) {
     alert("請填寫完整訂購人資訊");
     return;
   }
@@ -117,6 +118,7 @@ function checkout() {
   const order = {
     name: name,
     phone: phone,
+    pos_code: pos_code,
     address: address,
     productId: productIdList.join(','),
     productquantity: productquantityList.join(','),

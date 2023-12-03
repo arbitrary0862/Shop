@@ -33,6 +33,9 @@ $result = $conn->query("SELECT * FROM products");
     <label for="phone">電話：</label>
     <input type="tel" id="phone" placeholder="請輸入電話">
 
+    <label for="pos_code">郵遞區號：</label>
+    <input type="text" id="pos_code" placeholder="請輸入郵遞區號">
+
     <label for="address">地址：</label>
     <input type="text" id="address" placeholder="請輸入地址">
   </div>
